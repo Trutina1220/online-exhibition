@@ -1,0 +1,11 @@
+Model Information:
+* title:	RIGA SPACE - Simple Poligone
+* source:	https://sketchfab.com/3d-models/riga-space-simple-poligone-caeacbb0fa25445e9acd4c06fc9f6062
+* author:	traumstoff (https://sketchfab.com/traumstoff)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "RIGA SPACE - Simple Poligone" (https://sketchfab.com/3d-models/riga-space-simple-poligone-caeacbb0fa25445e9acd4c06fc9f6062) by traumstoff (https://sketchfab.com/traumstoff) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

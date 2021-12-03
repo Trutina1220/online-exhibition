@@ -7,7 +7,7 @@ var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, {
 const createScene =  () => {
     const scene = new BABYLON.Scene(engine);
 
-    const camera = new BABYLON.ArcRotateCamera("Camera", - Math.PI/2, Math.PI/2, 10, new BABYLON.Vector3(0.5,0.5,0));
+    const camera = new BABYLON.ArcRotateCamera("Camera", - Math.PI/2, Math.PI/2, 0, new BABYLON.Vector3(0,2,0));
     //2nd param is horizontal rotation
     //3rd param is vertical rotation
     //4th param is radius
@@ -18,11 +18,20 @@ const createScene =  () => {
     light1.intensity =0.75;
     light2.intensity =0.5;
 
-    //const box = BABYLON.MeshBuilder.CreateBox("box", {});
-    //console.log(box);
-    const house = BABYLON.SceneLoader.ImportMeshAsync("semi_house", "https://assets.babylonjs.com/meshes/", "both_houses_scene.babylon");
-    console.log(house)
-    
+    var room = BABYLON.SceneLoader.Append("Assets/Room/", "scene.gltf", scene, function (a) {
+        // Create a default arc rotate camera and light.
+        //scene.createDefaultCameraOrLight(true, true, true);
+
+        // The default camera looks at the back of the asset.
+        // Rotate the camera by 180 degrees to the front of the asset.
+        //scene.activeCamera.alpha += Math.PI;
+        console.log(a);
+        for (mesh in a.meshes){
+            // x
+            a.meshes[mesh].position.x = 1.5
+            a.meshes[mesh].position.y = 0
+        }
+    });
 
     return scene;
 }
