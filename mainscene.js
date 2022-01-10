@@ -1,23 +1,25 @@
+// imports
 import { createPointerLock } from "./pointerLock.js";
 
-var canvas = document.getElementById("renderCanvas");
+// function to create scene
+var createScene = async function (engine, canvas) {
+    var scene = new BABYLON.Scene(engine);
+    scene.gravity = new BABYLON.Vector3(0, -0.1, 0);
+    scene.enablePhysics(scene.gravity, new BABYLON.CannonJSPlugin());
+    scene.collisionsEnabled = true;
+    scene.workerCollisions = true;
 
+    var camera = createCamera(scene, canvas);
 
-var sceneToRender = null;
-var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
-const createScene =  () => {
-    const scene = new BABYLON.Scene(engine);
+    var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
 
-    // CAMERA ---------------------------
+    return scene;
+}
 
-    // const camera = new BABYLON.ArcRotateCamera("Camera", - Math.PI/2, Math.PI/2, 0, new BABYLON.Vector3(0,2,0));
-    // //2nd param is horizontal rotation
-    // //3rd param is vertical rotation
-    // //4th param is radius
-    // camera.attachControl(canvas, true);
+// function to create camera
+var createCamera = function (scene, canvas) {
 
-
-    let camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(0, 2, 0), scene);
+    var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(0, 2, 0), scene);
     camera.attachControl(canvas, true);
     camera.setTarget(BABYLON.Vector3.Zero());
 
@@ -35,60 +37,24 @@ const createScene =  () => {
     // Create pointer lock so that no need to click
     createPointerLock(scene)
 
-
-    // adding gravity
-    scene.gravity = new BABYLON.Vector3(0,0,0);
-    scene.enablePhysics(scene.gravity, new BABYLON.CannonJSPlugin());
-
-    scene.collisionsEnabled = true;
-    scene.workerCollisions = true;
-
     camera.ellipsoid = new BABYLON.Vector3(0.9, 1, 0.9);
     camera.checkCollisions = true;
     camera.applyGravity = true;
 
-    
+    return camera;
+}
 
-
-    // SCENE ---------------------------
-    const light1 = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 1));
-    const light2 = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0));   
-    light1.intensity =0.75;
-    light2.intensity =0.5;
-
-    // PLANE
-    var plane = BABYLON.MeshBuilder.CreatePlane("ground", {height: 30,width: 50}, scene)
-    //plane.position.y = 0;
-    //plane.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.WORLD);
+// function to create plane
+var createPlane = function(scene){
+    var plane = BABYLON.MeshBuilder.CreatePlane("ground", {height: 50, width: 50}, scene)
     plane.position = new BABYLON.Vector3(0, -0.1, 0);
     plane.rotation.x = Math.PI / 2;
     plane.collisionsEnabled = true;
     plane.checkCollisions = true;
+}
 
-    // ROOM
-    // var room = BABYLON.SceneLoader.Append("Assets/Room/", "scene.gltf", scene, function (a) {
-    //     console.log(a);
-    //     const roommesh = a.meshes[0];
-    //     roommesh.position.x = 0;
-    //     roommesh.position.y = -0.1;
-    //     roommesh.position.z = 0;
-        
-    // });
-
-    var room = BABYLON.SceneLoader.ImportMesh("", "Assets/Room/", "scene.gltf", scene, function (newMeshes) {
-
-        for (mesh in newMeshes) {
-            //newMeshes[mesh].scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
-            newMeshes[mesh].position = new BABYLON.Vector3(0, 0, 0);
-            newMeshes[mesh].collisionsEnabled = true;
-            newMeshes[mesh].checkCollisions = true;
-            //newMeshes[mesh].rotation.y = Math.PI/2 + Math.PI/2 + Math.PI/2 ;
-            //newMeshes[mesh].actionManager = new BABYLON.ActionManager(scene);
-          
-        }
-        
-    });
-
+//function to create boundaries
+var createBoundaries = function(scene){
     // WALLS
     var wall1 = BABYLON.MeshBuilder.CreateBox("wall1", {height: 13, width: 20.25, depth: 0.1}, scene)
     //plane.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.WORLD);
@@ -124,53 +90,66 @@ const createScene =  () => {
     ceiling.collisionsEnabled = true;
     ceiling.checkCollisions = true;
     ceiling.isVisible = false;
-
-
-    // STANDS
-
-    var tablecloth = BABYLON.SceneLoader.ImportMesh("", "Assets/tablecloth/", "scene.gltf", scene, function (newMeshes) {
-
-        for (mesh in newMeshes) {
-            newMeshes[mesh].scaling = new BABYLON.Vector3(2, 2, 2);
-            newMeshes[mesh].position = new BABYLON.Vector3(0, 3, 0);
-            newMeshes[mesh].rotation.y = Math.PI/2 + Math.PI/2 + Math.PI/2;
-            newMeshes[mesh].collisionsEnabled = true;
-            newMeshes[mesh].checkCollisions = true;
-        }
-        
-    });
-
-    var stand1 = BABYLON.MeshBuilder.CreateBox("stand1", {height: 1, width: 1, depth: 3});
-    stand1.checkCollisions = true;
-    stand1.position = new BABYLON.Vector3(-10, 0.5, 0.25);
-    
-
-    return scene;
 }
-        window.initFunction = async function() {
-            
-            
-            var asyncEngineCreation = async function() {
-                try {
-                return createDefaultEngine();
-                } catch(e) {
-                console.log("the available createEngine function failed. Creating the default engine instead");
-                return createDefaultEngine();
-                }
-            }
 
-            window.engine = await asyncEngineCreation();
-if (!engine) throw 'engine should not be null.';
-window.scene = createScene();};
-initFunction().then(() => {sceneToRender = scene        
-    engine.runRenderLoop(function () {
-        if (sceneToRender && sceneToRender.activeCamera) {
-            sceneToRender.render();
-        }
-    });
-});
+// main function
+var main = async function () {
+    var canvas = document.getElementById("renderCanvas");
+    var engine = new BABYLON.Engine(canvas, true);
+    var scene = await createScene(engine, canvas);
 
-// Resize
-window.addEventListener("resize", function () {
-    engine.resize();
-});
+    createPlane(scene);
+    //createBoundaries(scene);
+    var stand1 = BABYLON.MeshBuilder.CreateBox("stand1", {height: 1, width: 1.1, depth: 3.5});
+    stand1.checkCollisions = true;
+    stand1.rotation.y = Math.PI/2;
+    stand1.position = new BABYLON.Vector3(-9.5, 0.5, -5.5);
+
+    // load meshes
+    var assetsManager = new BABYLON.AssetsManager(scene);
+
+    // load room
+    // var roomTask = assetsManager.addMeshTask("roomTask", "", "./Assets/Room/", "scene.gltf");
+    // roomTask.onSuccess = function(task) {
+
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("Room mesh: " + mesh.name);
+    //         mesh.position = new BABYLON.Vector3(0, 0, 0);
+    //     });
+
+    // }
+
+    var chairTask = assetsManager.addMeshTask("roomTask", "", "./Assets/Chair/", "scene.gltf");
+    chairTask.onSuccess = function(task) {
+        var transformNode = scene.getTransformNodeByName("chairRoot");
+
+        task.loadedMeshes.forEach(function(mesh) {
+            console.log("Chair mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(0, 0, 0);
+            //mesh.position = new BABYLON.Vector3(-20, 17.3, 10);
+            //var temp = 0.04;
+            //mesh.scaling = new BABYLON.Vector3(temp,temp,temp);
+            //mesh.rotation = new BABYLON.Vector3(0, Math.PI/2, 0);
+            mesh.parent = transformNode;
+        });
+
+        
+
+        transformNode.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
+
+    }
+
+    assetsManager.onFinish = function(tasks) {
+        // run engine loop
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    }
+
+    assetsManager.load();
+}
+
+main();
