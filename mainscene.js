@@ -22,8 +22,8 @@ var createCamera = function (scene, canvas) {
     var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-18, 2, 0), scene);
     // var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(0, 2, 0), scene);
     camera.attachControl(canvas, true);
-    camera.setTarget(BABYLON.Vector3.Zero());
-
+    //camera.setTarget(BABYLON.Vector3.Zero());
+    camera.setTarget(new BABYLON.Vector3(0,2,2));
 
     // Setting up wasd camera movement control 
     camera.keysUp.push(87);
