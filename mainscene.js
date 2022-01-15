@@ -13,6 +13,10 @@ var createScene = async function (engine, canvas) {
 
     var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
 
+    // Skybox
+    var hdrTexture = new BABYLON.CubeTexture("./Textures/city.jpg", scene);
+    scene.createDefaultSkybox(hdrTexture, true, 10000);
+    
     return scene;
 }
 
@@ -57,6 +61,7 @@ var createPlane = function(scene){
     grassMat.diffuseTexture = new BABYLON.Texture("./Textures/grass.jpg", scene);
     grassMat.diffuseTexture.uScale = 20.0;
     grassMat.diffuseTexture.vScale = 20.0;
+
     plane.material = grassMat;
 }
 
@@ -136,10 +141,117 @@ var createStairs = function(scene){
 }
 
 var createStands = function(scene){
-    var stand1 = BABYLON.MeshBuilder.CreateBox("stand1", {height: 1, width: 1.1, depth: 3.5});
+    // Stand 1
+    var stand1 = BABYLON.MeshBuilder.CreateBox("stand1", {height: 1.5, width: 1.5, depth: 3});
     stand1.checkCollisions = true;
     stand1.rotation.y = Math.PI/2;
-    stand1.position = new BABYLON.Vector3(-9.5, 0.5, -5.5);
+    stand1.position = new BABYLON.Vector3(-5.6, 0.5, -5.5);
+
+    // Stand 2
+    var stand2 = BABYLON.MeshBuilder.CreateBox("stand2", {height: 2, width: 2, depth: 3});
+    stand2.checkCollisions = true;
+    //stand2.rotation.y = Math.PI/2;
+    stand2.position = new BABYLON.Vector3(1.5, 0.5, 0);
+
+    // Stand 3
+    var stand3 = BABYLON.MeshBuilder.CreateBox("stand3", {height: 1.5, width: 1.5, depth: 3});
+    stand3.checkCollisions = true;
+    stand3.rotation.y = Math.PI/2;
+    stand3.position = new BABYLON.Vector3(-5.6, 0.5, 5.5);
+
+    // Stand 4
+    var stand4 = BABYLON.MeshBuilder.CreateBox("stand4", {height: 1.5, width: 1.5, depth: 1.5});
+    stand4.checkCollisions = true;
+    stand4.rotation.y = Math.PI/2;
+    stand4.position = new BABYLON.Vector3(-1, 0.5, 4.5);
+
+    // Stand 5
+    var stand5 = BABYLON.MeshBuilder.CreateBox("stand5", {height: 1.5, width: 1.5, depth: 1.5});
+    stand5.checkCollisions = true;
+    stand5.rotation.y = Math.PI/2;
+    stand5.position = new BABYLON.Vector3(-1, 0.5, -4.5);
+
+    var marbleMat = new BABYLON.StandardMaterial("marbleMat", scene);
+    marbleMat.diffuseTexture = new BABYLON.Texture("./Textures/marble.jpg", scene);
+    
+    stand1.material = marbleMat;
+    stand2.material = marbleMat;
+    stand3.material = marbleMat;
+    stand4.material = marbleMat;
+    stand5.material = marbleMat;
+}
+
+var mammothAnimation = function(scene, object){
+    const frameRate = 5;
+    const angle = 0.523599;
+
+    // X ROTATE
+    const xRotate = new BABYLON.Animation("xRotate", "rotation.x", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const keyFrames = []; 
+
+    keyFrames.push({
+        frame: 0,
+        value: -angle
+    });
+
+    keyFrames.push({
+        frame: frameRate,
+        value: 0
+    });
+
+    keyFrames.push({
+        frame: 2 * frameRate,
+        value: -angle
+    });
+
+    xRotate.setKeys(keyFrames);
+
+    // Y SLIDE
+    const ySlide = new BABYLON.Animation("ySlide", "position.y", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const keyFrames2 = []; 
+
+    keyFrames2.push({
+        frame: 0,
+        value: 2.3
+    });
+
+    keyFrames2.push({
+        frame: frameRate,
+        value: 1.95
+    });
+
+    keyFrames2.push({
+        frame: 2 * frameRate,
+        value: 2.3
+    });
+
+    ySlide.setKeys(keyFrames2);
+
+    object.animations.push(xRotate);
+    object.animations.push(ySlide);
+
+    scene.beginAnimation(object, 0, 2 * frameRate, true);
+}
+
+var createSensors = function(scene){
+    
+    // Sensor 1
+    var sensor1 = BABYLON.MeshBuilder.CreateBox("sensor 1", {height: 2, width: 1, depth: 2});
+    sensor1.checkCollisions = true;
+    sensor1.position = new BABYLON.Vector3(0, 1, 3);
+    //sensor2.isVisible = false;
+
+    // Sensor 2
+    var sensor2 = BABYLON.MeshBuilder.CreateBox("sensor 2", {height: 2, width: 1, depth: 2});
+    sensor2.checkCollisions = true;
+    sensor2.position = new BABYLON.Vector3(0, 1, 0);
+    //sensor2.isVisible = false;
+
+    var sensors = [sensor1, sensor2]
+
+    return sensors;
 }
 
 // main function
@@ -153,41 +265,97 @@ var main = async function () {
     createBoundaries(scene);
     createStairs(scene);
     createStands(scene);
+    // var sensors = createSensors(scene);
+    // var sensorOne = sensors[0];
+    // var sensorTwo = sensors[1];
+
+   
 
     // load meshes
     var assetsManager = new BABYLON.AssetsManager(scene);
 
-    // load room
+    // ROOM
     var roomTask = assetsManager.addMeshTask("roomTask", "", "./Assets/Room/", "scene.gltf");
     roomTask.onSuccess = function(task) {
 
         task.loadedMeshes.forEach(function(mesh) {
-            console.log("Room mesh: " + mesh.name);
+            //console.log("Room mesh: " + mesh.name);
             mesh.position = new BABYLON.Vector3(0, 0, 0);
             //mesh.visibility = 0.3;
         });
 
     }
 
+    // MAMMOTH 
+    var mammothTask = assetsManager.addMeshTask("mammothTask", "", "./Assets/Mammoth/", "woolly-mammoth-skeleton.obj");
+    mammothTask.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            //console.log("mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-5.65, 1.95, 5.5);
+            //Scale the model down        
+            mesh.scaling.scaleInPlace(0.0004);
+            mesh.rotation.y = -Math.PI/2;
+
+            if (mesh.name.includes("Plane")){
+                mesh.visibility = 0;
+            }
+            
+            var mammothMat = new BABYLON.StandardMaterial("mammothMat", scene);
+            mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
+            mesh.material = mammothMat;
+
+            mammothAnimation(scene, mesh);
+        });
+    }
+
+     // SAMBA 
+    var sambaTask = assetsManager.addMeshTask("sambaTask", "", "https://assets.babylonjs.com/meshes/", "HVGirl.glb");
+    sambaTask.onSuccess = function(task){
     
+        task.loadedMeshes.forEach(function(mesh, particleSystems, skeletons, animationGroups) {
+            //console.log("mesh: " + mesh);
 
-    // var chairTask = assetsManager.addMeshTask("chairTask", "", "./Assets/Chair/", "scene.gltf");
-    // chairTask.onSuccess = function(task) {
-    //     //var transformNode = scene.getTransformNodeByName("chairRoot");
+            //Scale the model down        
+            mesh.scaling.scaleInPlace(0.05);
+            mesh.position = new BABYLON.Vector3(-5.6, 1.25, -5.5);
 
-    //     task.loadedMeshes.forEach(function(mesh) {
-    //         console.log("Chair mesh: " + mesh.name);
-    //         //mesh.position = new BABYLON.Vector3(0, 0, 0);
-    //         mesh.position = new BABYLON.Vector3(-20, 17.3, 10);
-    //         var temp = 0.03;
-    //         mesh.scaling = new BABYLON.Vector3(temp,temp,temp);
-    //         mesh.rotation = new BABYLON.Vector3(0, Math.PI/2, 0);
-    //         //mesh.parent = transformNode;
-    //     });
+            //Get the Samba animation Group
+            const sambaAnim = scene.getAnimationGroupByName("Samba");
 
-    //     //transformNode.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
+            //Play the Samba animation  
+            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+        });
 
-    // }
+    }
+
+    // BUMBLEBEE
+    var bumbleTask = assetsManager.addMeshTask("bumbleTask", "", "./Assets/Transformer/", "bumblebee-transformer-animation.obj");
+    bumbleTask.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            //console.log("transfo mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-1, 1.25, 4.5);
+            mesh.scaling.scaleInPlace(0.002);
+            mesh.rotation.y = -Math.PI/2 -Math.PI/4;
+          
+            if (mesh.name.includes("Plane")){
+                mesh.visibility = 0;
+            }
+        });
+    }
+
+    // CRUISER
+    var cruiserTask = assetsManager.addMeshTask("cruiserTask", "", "./Assets/Cruiser/", "light-cruiser-tenryuu.obj");
+    cruiserTask.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            //console.log("transfo mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-1, 1.25, -4.5);
+            mesh.scaling.scaleInPlace(0.9);
+            mesh.rotation.y = -Math.PI/4;
+        });
+    }
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop

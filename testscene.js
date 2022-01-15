@@ -121,26 +121,26 @@ var main = async function () {
     // }
 
     // MAMMOTH WORKS
-    var mammothTask = assetsManager.addMeshTask("mammothTask", "", "./Assets/Mammoth/", "woolly-mammoth-skeleton.obj");
-    mammothTask.onSuccess = function(task) {
+    // var mammothTask = assetsManager.addMeshTask("mammothTask", "", "./Assets/Mammoth/", "woolly-mammoth-skeleton.obj");
+    // mammothTask.onSuccess = function(task) {
 
-        task.loadedMeshes.forEach(function(mesh) {
-            console.log("mesh: " + mesh.name);
-            mesh.position = new BABYLON.Vector3(0, 2, 0);
-            //Scale the model down        
-            mesh.scaling.scaleInPlace(0.001);
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("mesh: " + mesh.name);
+    //         mesh.position = new BABYLON.Vector3(0, 2, 0);
+    //         //Scale the model down        
+    //         mesh.scaling.scaleInPlace(0.001);
 
-            if (mesh.name.includes("Plane")){
-                mesh.visibility = 0;
-            }
+    //         if (mesh.name.includes("Plane")){
+    //             mesh.visibility = 0;
+    //         }
             
-            var mammothMat = new BABYLON.StandardMaterial("mammothMat", scene);
-            mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
-            mesh.material = mammothMat;
+    //         var mammothMat = new BABYLON.StandardMaterial("mammothMat", scene);
+    //         mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
+    //         mesh.material = mammothMat;
 
-            mammothAnimation(scene, mesh);
-        });
-    }
+    //         mammothAnimation(scene, mesh);
+    //     });
+    // }
 
     
 
@@ -161,6 +161,67 @@ var main = async function () {
     //     });
 
     // }
+
+    // var chairTask = assetsManager.addMeshTask("chairTask", "", "./Assets/Chair/", "scene.gltf");
+    // chairTask.onSuccess = function(task) {
+    //     //var transformNode = scene.getTransformNodeByName("chairRoot");
+
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("Chair mesh: " + mesh.name);
+    //         //mesh.position = new BABYLON.Vector3(0, 0, 0);
+    //         mesh.position = new BABYLON.Vector3(-20, 17.3, 10);
+    //         var temp = 0.03;
+    //         mesh.scaling = new BABYLON.Vector3(temp,temp,temp);
+    //         mesh.rotation = new BABYLON.Vector3(0, Math.PI/2, 0);
+    //         //mesh.parent = transformNode;
+    //     });
+
+    //     //transformNode.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
+
+    // }
+
+    // var chairTask = assetsManager.addMeshTask("chairTask", "", "./Assets/Chair/", "scene.gltf");
+    // chairTask.onSuccess = function(task) {
+
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("Chair mesh: " + mesh.name);
+    //         mesh.position = new BABYLON.Vector3(0, 50, 0);
+    //         mesh.scaling.scaleInPlace(0.01);
+    //         //mesh.rotation = new BABYLON.Vector3(0, Math.PI/2, 0);
+          
+    //     });
+
+    // }
+
+    // BUMBLEBEE TRANSFORMER
+    var bumbleTask = assetsManager.addMeshTask("bumbleTask", "", "./Assets/Transformer/", "bumblebee-transformer-animation.obj");
+    bumbleTask.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            console.log("transfo mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(0, 0, 0);
+            mesh.scaling.scaleInPlace(0.01);
+          
+            if (mesh.name.includes("Plane")){
+                mesh.visibility = 0;
+            }
+        });
+    }
+
+    // Cruiser
+    var cruiserTask = assetsManager.addMeshTask("cruiserTask", "", "./Assets/Cruiser/", "light-cruiser-tenryuu.obj");
+    cruiserTask.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            console.log("transfo mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(10, 0, 0);
+            mesh.scaling.scaleInPlace(1);
+          
+            if (mesh.name.includes("Plane")){
+                mesh.visibility = 0;
+            }
+        });
+    }
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop
