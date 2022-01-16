@@ -12,10 +12,6 @@ var createScene = async function (engine, canvas) {
     var camera = createCamera(scene, canvas);
 
     var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
-
-    // Skybox
-    var hdrTexture = new BABYLON.CubeTexture("./Textures/city.jpg", scene);
-    scene.createDefaultSkybox(hdrTexture, true, 10000);
     
     return scene;
 }
@@ -51,8 +47,8 @@ var createCamera = function (scene, canvas) {
 
 // function to create plane
 var createPlane = function(scene){
-    var plane = BABYLON.MeshBuilder.CreatePlane("ground", {height: 100, width: 100}, scene)
-    plane.position = new BABYLON.Vector3(0, -0.1, 0);
+    var plane = BABYLON.MeshBuilder.CreatePlane("ground", {height: 200, width: 200}, scene)
+    plane.position = new BABYLON.Vector3(-10, -0.1, 0);
     plane.rotation.x = Math.PI / 2;
     plane.collisionsEnabled = true;
     plane.checkCollisions = true;
@@ -63,6 +59,18 @@ var createPlane = function(scene){
     grassMat.diffuseTexture.vScale = 20.0;
 
     plane.material = grassMat;
+}
+
+// skybox
+var createSkybox = function(scene){
+    const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:500}, scene);
+    const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./Textures/Citybox/skybox2", scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material = skyboxMaterial;
 }
 
 //function to create boundaries
@@ -108,6 +116,66 @@ var createBoundaries = function(scene){
     ceiling.collisionsEnabled = true;
     ceiling.checkCollisions = true;
     ceiling.isVisible = false;
+
+    // inside walls
+    var wallinside1 = BABYLON.MeshBuilder.CreateBox("wallinside1", {height: 6, width: 10, depth: 0.2}, scene)
+    wallinside1.position = new BABYLON.Vector3(-12.95, 0, 0.25);
+    wallinside1.rotation.y = Math.PI / 2;
+    wallinside1.collisionsEnabled = true;
+    wallinside1.checkCollisions = true;
+    wallinside1.isVisible = false;
+
+    var wallinside2 = BABYLON.MeshBuilder.CreateBox("wallinside2", {height: 6, width: 6, depth: 0.2}, scene)
+    wallinside2.position = new BABYLON.Vector3(-10, 0, -7.2);
+    wallinside2.collisionsEnabled = true;
+    wallinside2.checkCollisions = true;
+    wallinside2.isVisible = false;
+
+    var wallinside3 = BABYLON.MeshBuilder.CreateBox("wallinside3", {height: 6, width: 6, depth: 0.2}, scene)
+    wallinside3.position = new BABYLON.Vector3(-1.2, 0, -7.2);
+    wallinside3.collisionsEnabled = true;
+    wallinside3.checkCollisions = true;
+    wallinside3.isVisible = false;
+
+    var wallinside4 = BABYLON.MeshBuilder.CreateBox("wallinside4", {height: 6, width: 6, depth: 0.2}, scene)
+    wallinside4.position = new BABYLON.Vector3(-1.2, 0, 7.6);
+    wallinside4.collisionsEnabled = true;
+    wallinside4.checkCollisions = true;
+    wallinside4.isVisible = false;
+
+    var wallinside5 = BABYLON.MeshBuilder.CreateBox("wallinside5", {height: 6, width: 6, depth: 0.2}, scene)
+    wallinside5.position = new BABYLON.Vector3(-10, 0, 7.6);
+    wallinside5.collisionsEnabled = true;
+    wallinside5.checkCollisions = true;
+    wallinside5.isVisible = false;
+}
+
+var createOuterbounds = function(scene){
+    var outbound1 = BABYLON.MeshBuilder.CreateBox("outbound1", {height: 30, width: 80, depth: 1}, scene)
+    outbound1.position = new BABYLON.Vector3(0, 0, 30);
+    outbound1.collisionsEnabled = true;
+    outbound1.checkCollisions = true;
+    outbound1.isVisible = false;
+
+    var outbound2 = BABYLON.MeshBuilder.CreateBox("outbound2", {height: 30, width: 80, depth: 1}, scene)
+    outbound2.position = new BABYLON.Vector3(0, 0, -30);
+    outbound2.collisionsEnabled = true;
+    outbound2.checkCollisions = true;
+    outbound2.isVisible = false;
+
+    var outbound3 = BABYLON.MeshBuilder.CreateBox("outbound3", {height: 30, width: 80, depth: 1}, scene)
+    outbound3.position = new BABYLON.Vector3(25, 0, 0);
+    outbound3.rotation.y = Math.PI/2;
+    outbound3.collisionsEnabled = true;
+    outbound3.checkCollisions = true;
+    outbound3.isVisible = false;
+
+    var outbound4 = BABYLON.MeshBuilder.CreateBox("outbound4", {height: 30, width: 80, depth: 1}, scene)
+    outbound4.position = new BABYLON.Vector3(-40, 0, 0);
+    outbound4.rotation.y = Math.PI/2;
+    outbound4.collisionsEnabled = true;
+    outbound4.checkCollisions = true;
+    outbound4.isVisible = false;
 }
 
 var createStairs = function(scene){
@@ -265,6 +333,8 @@ var main = async function () {
     createBoundaries(scene);
     createStairs(scene);
     createStands(scene);
+    createSkybox(scene);
+    createOuterbounds(scene);
     // var sensors = createSensors(scene);
     // var sensorOne = sensors[0];
     // var sensorTwo = sensors[1];
@@ -305,7 +375,7 @@ var main = async function () {
             mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
             mesh.material = mammothMat;
 
-            mammothAnimation(scene, mesh);
+            //mammothAnimation(scene, mesh);
         });
     }
 
@@ -324,7 +394,7 @@ var main = async function () {
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
             //Play the Samba animation  
-            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
         });
 
     }
