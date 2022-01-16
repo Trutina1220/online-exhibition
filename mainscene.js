@@ -2,14 +2,12 @@
 import { createPointerLock } from "./pointerLock.js";
 
 // function to create scene
-var createScene = async function (engine, canvas) {
+var createScene = async function (engine) {
     var scene = new BABYLON.Scene(engine);
     scene.gravity = new BABYLON.Vector3(0, -0.1, 0);
     scene.enablePhysics(scene.gravity, new BABYLON.CannonJSPlugin());
     scene.collisionsEnabled = true;
     scene.workerCollisions = true;
-
-    var camera = createCamera(scene, canvas);
 
     var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
     
@@ -19,10 +17,8 @@ var createScene = async function (engine, canvas) {
 // function to create camera
 var createCamera = function (scene, canvas) {
 
-    var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-18, 2, 0), scene);
-    // var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(0, 2, 0), scene);
+    var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-20, 2, 0), scene);
     camera.attachControl(canvas, true);
-    //camera.setTarget(BABYLON.Vector3.Zero());
     camera.setTarget(new BABYLON.Vector3(0,2,2));
 
     // Setting up wasd camera movement control 
@@ -38,7 +34,7 @@ var createCamera = function (scene, canvas) {
     // Create pointer lock so that no need to click
     createPointerLock(scene)
 
-    camera.ellipsoid = new BABYLON.Vector3(0.9, 1, 0.9);
+    camera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
     camera.checkCollisions = true;
     camera.applyGravity = true;
 
@@ -76,18 +72,21 @@ var createSkybox = function(scene){
 //function to create boundaries
 var createBoundaries = function(scene){
     // WALLS
+    // left wall
     var wall1 = BABYLON.MeshBuilder.CreateBox("wall1", {height: 13, width: 20.25, depth: 0.1}, scene)
     wall1.position = new BABYLON.Vector3(-5.6, 0, 10.35);
     wall1.collisionsEnabled = true;
     wall1.checkCollisions = true;
     wall1.isVisible = false;
 
+    // right wall
     var wall2 = BABYLON.MeshBuilder.CreateBox("wall2", {height: 9.8, width: 20.25, depth: 0.1}, scene)
     wall2.position = new BABYLON.Vector3(-5.6, 0, -9.85);
     wall2.collisionsEnabled = true;
     wall2.checkCollisions = true;
     wall2.isVisible = false;
 
+    // back wall
     var wall3 = BABYLON.MeshBuilder.CreateBox("wall3", {height: 13, width: 20.20, depth: 0.1}, scene)
     wall3.position = new BABYLON.Vector3(4.5, 0, 0.2);
     wall3.rotation.y = Math.PI / 2;
@@ -110,6 +109,7 @@ var createBoundaries = function(scene){
     wall5.checkCollisions = true;
     wall5.isVisible = false;
 
+    // ceiling wall
     var ceiling = BABYLON.MeshBuilder.CreateBox("ceiling", {height: 20.5, width: 20.5, depth: 0.1}, scene)
     ceiling.position = new BABYLON.Vector3(-5.7, 4.8, 0);
     ceiling.rotation.x = Math.PI / 2;
@@ -118,6 +118,7 @@ var createBoundaries = function(scene){
     ceiling.isVisible = false;
 
     // inside walls
+    // front
     var wallinside1 = BABYLON.MeshBuilder.CreateBox("wallinside1", {height: 6, width: 10, depth: 0.2}, scene)
     wallinside1.position = new BABYLON.Vector3(-12.95, 0, 0.25);
     wallinside1.rotation.y = Math.PI / 2;
@@ -148,6 +149,36 @@ var createBoundaries = function(scene){
     wallinside5.collisionsEnabled = true;
     wallinside5.checkCollisions = true;
     wallinside5.isVisible = false;
+
+    // additional railing for roof
+    // front railing
+    var railing1 = BABYLON.MeshBuilder.CreateBox("railing1", {height: 3, width: 7, depth: 0.1}, scene)
+    railing1.position = new BABYLON.Vector3(-15.8, 5, 0);
+    railing1.rotation.y = Math.PI / 2;
+    railing1.collisionsEnabled = true;
+    railing1.checkCollisions = true;
+    railing1.isVisible = false;
+
+    // right railings
+    var railing2 = BABYLON.MeshBuilder.CreateBox("railing2", {height: 3, width: 7.5, depth: 0.1}, scene)
+    railing2.position = new BABYLON.Vector3(0.8, 5, -9.85);
+    railing2.collisionsEnabled = true;
+    railing2.checkCollisions = true;
+    railing2.isVisible = false;
+
+    var railing3 = BABYLON.MeshBuilder.CreateBox("railing3", {height: 3, width: 7.5, depth: 0.1}, scene)
+    railing3.position = new BABYLON.Vector3(-11.8, 5, -9.85);
+    railing3.collisionsEnabled = true;
+    railing3.checkCollisions = true;
+    railing3.isVisible = false;
+
+    //middle wall for hole
+    var wallmid = BABYLON.MeshBuilder.CreateBox("wallmid", {height: 1, width: 5, depth: 5}, scene)
+    wallmid.position = new BABYLON.Vector3(-5.6, 5.5, 0.3);
+    wallmid.collisionsEnabled = true;
+    wallmid.checkCollisions = true;
+    wallmid.isVisible = false;
+
 }
 
 var createOuterbounds = function(scene){
@@ -219,7 +250,7 @@ var createStands = function(scene){
     var stand2 = BABYLON.MeshBuilder.CreateBox("stand2", {height: 2, width: 2, depth: 3});
     stand2.checkCollisions = true;
     //stand2.rotation.y = Math.PI/2;
-    stand2.position = new BABYLON.Vector3(1.5, 0.5, 0);
+    stand2.position = new BABYLON.Vector3(1.4, 0.5, 0);
 
     // Stand 3
     var stand3 = BABYLON.MeshBuilder.CreateBox("stand3", {height: 1.5, width: 1.5, depth: 3});
@@ -247,6 +278,22 @@ var createStands = function(scene){
     stand3.material = marbleMat;
     stand4.material = marbleMat;
     stand5.material = marbleMat;
+}
+
+var createDoor = function(scene){
+    // sliding door
+    var door = BABYLON.MeshBuilder.CreateBox("door", {height: 6.5, width: 5.3, depth: 0.2}, scene)
+    door.position = new BABYLON.Vector3(-15.75, 0, 0.3);
+    door.rotation.y = Math.PI / 2;
+    door.collisionsEnabled = true;
+    door.checkCollisions = true;
+    door.visibility = 0.8
+
+    var glassMat = new BABYLON.StandardMaterial("glassMat", scene);
+    glassMat.diffuseTexture = new BABYLON.Texture("./Textures/glass.jpg", scene);
+    door.material = glassMat;
+
+    return door;
 }
 
 var mammothAnimation = function(scene, object){
@@ -303,30 +350,67 @@ var mammothAnimation = function(scene, object){
     scene.beginAnimation(object, 0, 2 * frameRate, true);
 }
 
+var doorAnimation = function(scene, object){
+    const frameRate = 20;
+
+    // X SLIDE
+    const zSlide = new BABYLON.Animation("zSlide", "position.z", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+
+    const keyFrames = []; 
+
+    keyFrames.push({
+        frame: 0,
+        value: 0.3
+    });
+
+    keyFrames.push({
+        frame: frameRate,
+        value: 5
+    });
+
+    keyFrames.push({
+        frame: 2 * frameRate,
+        value: 5
+    });
+
+    keyFrames.push({
+        frame: 3 * frameRate,
+        value: 0.3
+    });
+
+    zSlide.setKeys(keyFrames);
+
+    object.animations.push(zSlide);
+
+    scene.beginAnimation(object, 0, 3 * frameRate, true);
+}
+
 var createSensors = function(scene){
     
     // Sensor 1
     var sensor1 = BABYLON.MeshBuilder.CreateBox("sensor 1", {height: 2, width: 1, depth: 2});
     sensor1.checkCollisions = true;
-    sensor1.position = new BABYLON.Vector3(0, 1, 3);
+    sensor1.position = new BABYLON.Vector3(-20, 1, 3);
     //sensor2.isVisible = false;
 
     // Sensor 2
-    var sensor2 = BABYLON.MeshBuilder.CreateBox("sensor 2", {height: 2, width: 1, depth: 2});
-    sensor2.checkCollisions = true;
-    sensor2.position = new BABYLON.Vector3(0, 1, 0);
-    //sensor2.isVisible = false;
+    // var sensor2 = BABYLON.MeshBuilder.CreateBox("sensor 2", {height: 2, width: 1, depth: 2});
+    // sensor2.checkCollisions = true;
+    // sensor2.position = new BABYLON.Vector3(0, 1, 0);
+    // //sensor2.isVisible = false;
 
-    var sensors = [sensor1, sensor2]
+    // var sensors = [sensor1, sensor2]
 
-    return sensors;
+    // return sensors;
+    return sensor1;
 }
 
 // main function
 var main = async function () {
     var canvas = document.getElementById("renderCanvas");
     var engine = new BABYLON.Engine(canvas, true);
-    var scene = await createScene(engine, canvas);
+    var scene = await createScene(engine);
+    var camera = createCamera(scene, canvas);
 
     // create objects
     createPlane(scene);
@@ -335,11 +419,17 @@ var main = async function () {
     createStands(scene);
     createSkybox(scene);
     createOuterbounds(scene);
-    // var sensors = createSensors(scene);
+    var door = createDoor(scene);
+    //var sensor1 = createSensors(scene);
     // var sensorOne = sensors[0];
     // var sensorTwo = sensors[1];
 
-   
+    camera.onCollide = function (colMesh) {
+        if (colMesh.uniqueId === door.uniqueId) {
+            console.log("collision");
+            doorAnimation(scene, door);
+		}
+	}
 
     // load meshes
     var assetsManager = new BABYLON.AssetsManager(scene);
@@ -375,7 +465,7 @@ var main = async function () {
             mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
             mesh.material = mammothMat;
 
-            //mammothAnimation(scene, mesh);
+            mammothAnimation(scene, mesh);
         });
     }
 
@@ -394,7 +484,7 @@ var main = async function () {
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
             //Play the Samba animation  
-            //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
         });
 
     }
