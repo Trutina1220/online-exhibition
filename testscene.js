@@ -12,6 +12,18 @@ var createScene = async function (engine, canvas) {
     var camera = createCamera(scene, canvas);
 
     var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+    
+    //Light direction is directly down from a position one unit up, slow decay
+	// var light = new BABYLON.SpotLight("spotLight", new BABYLON.Vector3(-1, 1, -1), new BABYLON.Vector3(0, -1, 0), Math.PI / 2, 10, scene);
+	// light.diffuse = new BABYLON.Color3(1, 0, 0);
+	// light.specular = new BABYLON.Color3(0, 1, 0);
+	
+	//Light direction is directly down from a position one unit up, fast decay
+	var light1 = new BABYLON.SpotLight("spotLight1", new BABYLON.Vector3(1, 1, 1), new BABYLON.Vector3(0, -1, 0), Math.PI / 2, 50, scene);
+	light1.diffuse = new BABYLON.Color3(1, 1, 0);
+	light1.specular = new BABYLON.Color3(1, 1, 0);
+
+	var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 4, height: 4}, scene);	
 
     return scene;
 }
@@ -58,7 +70,7 @@ var createPlane = function(scene){
     grassMat.diffuseTexture = new BABYLON.Texture("./Textures/grass.jpg", scene);
     grassMat.diffuseTexture.uScale = 20.0;
     grassMat.diffuseTexture.vScale = 20.0;
-    plane.material = grassMat;
+    //plane.material = grassMat;
 }
 
 var mammothAnimation = function(scene, object){
@@ -194,34 +206,48 @@ var main = async function () {
     // }
 
     // BUMBLEBEE TRANSFORMER
-    var bumbleTask = assetsManager.addMeshTask("bumbleTask", "", "./Assets/Transformer/", "bumblebee-transformer-animation.obj");
-    bumbleTask.onSuccess = function(task) {
+    // var bumbleTask = assetsManager.addMeshTask("bumbleTask", "", "./Assets/Transformer/", "bumblebee-transformer-animation.obj");
+    // bumbleTask.onSuccess = function(task) {
 
-        task.loadedMeshes.forEach(function(mesh) {
-            console.log("transfo mesh: " + mesh.name);
-            mesh.position = new BABYLON.Vector3(0, 0, 0);
-            mesh.scaling.scaleInPlace(0.01);
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("transfo mesh: " + mesh.name);
+    //         mesh.position = new BABYLON.Vector3(0, 0, 0);
+    //         mesh.scaling.scaleInPlace(0.01);
           
-            if (mesh.name.includes("Plane")){
-                mesh.visibility = 0;
-            }
-        });
-    }
+    //         if (mesh.name.includes("Plane")){
+    //             mesh.visibility = 0;
+    //         }
+    //     });
+    // }
 
     // Cruiser
-    var cruiserTask = assetsManager.addMeshTask("cruiserTask", "", "./Assets/Cruiser/", "light-cruiser-tenryuu.obj");
-    cruiserTask.onSuccess = function(task) {
+    // var cruiserTask = assetsManager.addMeshTask("cruiserTask", "", "./Assets/Cruiser/", "light-cruiser-tenryuu.obj");
+    // cruiserTask.onSuccess = function(task) {
 
-        task.loadedMeshes.forEach(function(mesh) {
-            console.log("transfo mesh: " + mesh.name);
-            mesh.position = new BABYLON.Vector3(10, 0, 0);
-            mesh.scaling.scaleInPlace(1);
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("transfo mesh: " + mesh.name);
+    //         mesh.position = new BABYLON.Vector3(10, 0, 0);
+    //         mesh.scaling.scaleInPlace(1);
           
-            if (mesh.name.includes("Plane")){
-                mesh.visibility = 0;
-            }
-        });
-    }
+    //         if (mesh.name.includes("Plane")){
+    //             mesh.visibility = 0;
+    //         }
+    //     });
+    // }
+
+      // CAR
+      var carTask = assetsManager.addMeshTask("carTask", "", "https://assets.babylonjs.com/meshes/", "car.glb");
+      carTask.onSuccess = function(task){
+      
+          task.loadedMeshes.forEach(function(mesh, particleSystems, skeletons, animationGroups) {
+              console.log("mesh: " + mesh);
+  
+              const car = scene.getMeshByName("car");
+              car.position = new BABYLON.Vector3(0, 2, 0);
+              car.scaling.scaleInPlace(1);
+          });
+  
+      }
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop

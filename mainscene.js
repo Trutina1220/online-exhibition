@@ -246,7 +246,7 @@ var createStands = function(scene){
     stand1.rotation.y = Math.PI/2;
     stand1.position = new BABYLON.Vector3(-5.6, 0.5, -5.5);
 
-    // Stand 2
+    // Stand 2 middle 
     var stand2 = BABYLON.MeshBuilder.CreateBox("stand2", {height: 2, width: 2, depth: 3});
     stand2.checkCollisions = true;
     //stand2.rotation.y = Math.PI/2;
@@ -294,6 +294,58 @@ var createDoor = function(scene){
     door.material = glassMat;
 
     return door;
+}
+
+var createArt = function(scene){
+    // Dino painting
+    var art1 = BABYLON.MeshBuilder.CreatePlane("art1", {height: 2, width: 2}, scene)
+    art1.position = new BABYLON.Vector3(-10, 1.5, 7.4);
+    
+    var artMat1 = new BABYLON.StandardMaterial("artMat1", scene);
+    artMat1.diffuseTexture = new BABYLON.Texture("./Textures/art1.jpg", scene);
+
+    art1.material = artMat1;
+
+    // Train painting
+    var art2 = BABYLON.MeshBuilder.CreatePlane("art2", {height: 2, width: 2}, scene)
+    art2.position = new BABYLON.Vector3(-1.2, 1.5, 7.4);
+    
+    var artMat2 = new BABYLON.StandardMaterial("artMat2", scene);
+    artMat2.diffuseTexture = new BABYLON.Texture("./Textures/art2.jpg", scene);
+
+    art2.material = artMat2;
+
+    // Teddy painting
+    var art3 = BABYLON.MeshBuilder.CreatePlane("art3", {height: 2, width: 2}, scene)
+    art3.position = new BABYLON.Vector3(-1.2, 1.5, -6.9);
+    art3.rotation.y = Math.PI / 2 + Math.PI / 2;
+    
+    var artMat3 = new BABYLON.StandardMaterial("artMat3", scene);
+    artMat3.diffuseTexture = new BABYLON.Texture("./Textures/art3.jpg", scene);
+
+    art3.material = artMat3;
+
+    // Teddy painting
+    var art4 = BABYLON.MeshBuilder.CreatePlane("art4", {height: 2, width: 2}, scene)
+    art4.position = new BABYLON.Vector3(-10, 1.5, -6.9);
+    art4.rotation.y = Math.PI / 2 + Math.PI / 2;
+    
+    var artMat4 = new BABYLON.StandardMaterial("artMat4", scene);
+    artMat4.diffuseTexture = new BABYLON.Texture("./Textures/art4.jpg", scene);
+
+    art4.material = artMat4;
+}
+
+var createSign = function(scene){
+    // sign
+    var sign = BABYLON.MeshBuilder.CreatePlane("sign", {height: 1, width: 2}, scene)
+    sign.position = new BABYLON.Vector3(-16, 1.7, 4.5);
+    sign.rotation.y = Math.PI / 2;
+    
+    var signMat1 = new BABYLON.StandardMaterial("signMat1", scene);
+    signMat1.diffuseTexture = new BABYLON.Texture("./Textures/sign.png", scene);
+
+    sign.material = signMat1;
 }
 
 var mammothAnimation = function(scene, object){
@@ -348,6 +400,112 @@ var mammothAnimation = function(scene, object){
     object.animations.push(ySlide);
 
     scene.beginAnimation(object, 0, 2 * frameRate, true);
+}
+
+var carAnimation = function(scene, object){
+    const frameRate = 5;
+
+    // X ROTATE
+    const xSlide = new BABYLON.Animation("xSlide", "position.x", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const keyFrames = []; 
+
+    keyFrames.push({
+        frame: 0,
+        value: -0.7
+    });
+
+    keyFrames.push({
+        frame: 10,
+        value: -0.7
+    });
+
+    keyFrames.push({
+        frame: 20,
+        value: -1.9
+    });
+
+    keyFrames.push({
+        frame: 30,
+        value: -1.9
+    });
+
+    keyFrames.push({
+        frame: 40,
+        value: -0.7
+    });
+
+    xSlide.setKeys(keyFrames);
+
+    // Z SLIDE
+    const zSlide = new BABYLON.Animation("zSlide", "position.z", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const keyFrames2 = []; 
+
+    keyFrames2.push({
+        frame: 0,
+        value: 1
+    });
+
+    keyFrames2.push({
+        frame: 10,
+        value: -1
+    });
+
+    keyFrames2.push({
+        frame: 20,
+        value: -1
+    });
+
+    keyFrames2.push({
+        frame: 30,
+        value: 1
+    });
+
+    keyFrames2.push({
+        frame: 40,
+        value: 1
+    });
+
+    zSlide.setKeys(keyFrames2);
+
+    // X ROTATE
+    const xRotate = new BABYLON.Animation("xRotate", "rotation.z", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const keyFrames3 = []; 
+
+    keyFrames3.push({
+        frame: 0,
+        value: -1.5708
+    });
+
+    keyFrames3.push({
+        frame: 10,
+        value: -1.5708
+    });
+
+    keyFrames3.push({
+        frame: 20,
+        value: -1.5708-1.5708-1.5708
+    });
+
+    keyFrames3.push({
+        frame: 30,
+        value: -1.5708-1.5708-1.5708
+    });
+
+    keyFrames3.push({
+        frame: 40,
+        value: -1.5708
+    });
+
+    xRotate.setKeys(keyFrames3);
+
+    //object.animations.push(xSlide);
+    object.animations.push(zSlide);
+    object.animations.push(xRotate);
+
+    scene.beginAnimation(object, 0, 40, true);
 }
 
 var doorAnimation = function(scene, object){
@@ -405,6 +563,37 @@ var createSensors = function(scene){
     return sensor1;
 }
 
+var wheelAnimation = function(scene, wheel){
+    const frameRate = 5;
+    const angle = 3.14159;
+
+    // X ROTATE
+    const xRotate = new BABYLON.Animation("xRotate", "rotation", frameRate, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const keyFrames = []; 
+
+    keyFrames.push({
+        frame: 0,
+        value: new BABYLON.Vector3(angle, 0, 0)
+    });
+
+    keyFrames.push({
+        frame: frameRate,
+        value: 0
+    });
+
+    keyFrames.push({
+        frame: 2 * frameRate,
+        value: new BABYLON.Vector3(angle, 0, 0)
+    });
+
+    xRotate.setKeys(keyFrames);
+
+    wheel.animations.push(xRotate);
+
+    scene.beginAnimation(wheel, 0, 2 * frameRate, true);
+}
+
 // main function
 var main = async function () {
     var canvas = document.getElementById("renderCanvas");
@@ -419,6 +608,8 @@ var main = async function () {
     createStands(scene);
     createSkybox(scene);
     createOuterbounds(scene);
+    createArt(scene);
+    createSign(scene);
     var door = createDoor(scene);
     //var sensor1 = createSensors(scene);
     // var sensorOne = sensors[0];
@@ -465,7 +656,7 @@ var main = async function () {
             mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
             mesh.material = mammothMat;
 
-            mammothAnimation(scene, mesh);
+            //mammothAnimation(scene, mesh);
         });
     }
 
@@ -484,10 +675,40 @@ var main = async function () {
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
             //Play the Samba animation  
-            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
         });
 
     }
+
+    // CAR
+    var carTask = assetsManager.addMeshTask("carTask", "", "https://assets.babylonjs.com/meshes/", "car.glb");
+    carTask.onSuccess = function(task){
+    
+        task.loadedMeshes.forEach(function(mesh, particleSystems, skeletons, animationGroups) {
+            //console.log("mesh: " + mesh);
+
+            const car = scene.getMeshByName("car");
+            car.position = new BABYLON.Vector3(-1.3, 1.67, 1);
+            car.rotation = new BABYLON.Vector3(Math.PI / 2, 0, -Math.PI / 2);
+
+            //wheel animation
+            const wheelRB = scene.getMeshByName("wheelRB");
+            const wheelRF = scene.getMeshByName("wheelRF");
+            const wheelLB = scene.getMeshByName("wheelLB");
+            const wheelLF = scene.getMeshByName("wheelLF");
+            
+            // wheel animation dont work bruh
+            //wheelAnimation(scene, car);
+            // scene.beginAnimation(wheelRB, 0, 30, true);
+            // scene.beginAnimation(wheelRF, 0, 30, true);
+            // scene.beginAnimation(wheelLB, 0, 30, true);
+            // scene.beginAnimation(wheelLF, 0, 30, true);
+
+            //carAnimation(scene, car);
+        });
+
+    }
+    
 
     // BUMBLEBEE
     var bumbleTask = assetsManager.addMeshTask("bumbleTask", "", "./Assets/Transformer/", "bumblebee-transformer-animation.obj");
@@ -514,6 +735,32 @@ var main = async function () {
             mesh.position = new BABYLON.Vector3(-1, 1.25, -4.5);
             mesh.scaling.scaleInPlace(0.9);
             mesh.rotation.y = -Math.PI/4;
+        });
+    }
+
+    // tree 1
+    var treeTask1 = assetsManager.addMeshTask("treeTask1", "", "./Assets/trees/OBJ/04/", "Col_1_tree_4.obj");
+    treeTask1.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            console.log("tree mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-10, 0, 20);
+            mesh.scaling.scaleInPlace(0.7);
+            //mesh.rotation.y = -Math.PI/4;
+            mesh.rotation.x = -Math.PI / 2;
+        });
+    }
+
+    // tree 2
+    var treeTask2 = assetsManager.addMeshTask("treeTask2", "", "./Assets/trees/OBJ/03/", "Col_1_tree_3.obj");
+    treeTask2.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            console.log("tree mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-10, 0, -20);
+            mesh.scaling.scaleInPlace(0.7);
+            //mesh.rotation.y = -Math.PI/4;
+            mesh.rotation.x = -Math.PI / 2;
         });
     }
 
