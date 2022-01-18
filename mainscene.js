@@ -4,8 +4,11 @@ import { createPointerLock } from "./pointerLock.js";
 // function to create scene
 var createScene = async function (engine) {
     var scene = new BABYLON.Scene(engine);
+    // Creating gravity for the scene so that player dont go out of bounds
     scene.gravity = new BABYLON.Vector3(0, -0.1, 0);
+    // Enable Physics for using
     scene.enablePhysics(scene.gravity, new BABYLON.CannonJSPlugin());
+    // Set the collision to true
     scene.collisionsEnabled = true;
     scene.workerCollisions = true;
 
@@ -17,6 +20,8 @@ var createScene = async function (engine) {
 // function to create camera
 var createCamera = function (scene, canvas) {
 
+
+    // Create a universal camera and set it to desire initial position
     var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-30, 2, 25), scene);
     camera.attachControl(canvas, true);
     camera.setTarget(new BABYLON.Vector3(0,2,0));
@@ -27,8 +32,12 @@ var createCamera = function (scene, canvas) {
     camera.keysLeft.push(65);
     camera.keysRight.push(68);
 
+
+    // Setting the camera speed so it feels natural
     camera.speed = 2;
+    // Setting the camera field of view
     camera.fov = 0.8;
+    // Setting camera inertia to make the movement smooth
     camera.inertia = 0.2;
 
     // Create pointer lock so that no need to click
@@ -43,12 +52,14 @@ var createCamera = function (scene, canvas) {
 
 // function to create plane
 var createPlane = function(scene){
+    // Creating the ground for the environment
     var plane = BABYLON.MeshBuilder.CreatePlane("ground", {height: 200, width: 200}, scene)
     plane.position = new BABYLON.Vector3(-10, -0.1, 0);
     plane.rotation.x = Math.PI / 2;
     plane.collisionsEnabled = true;
     plane.checkCollisions = true;
     
+    // Give the ground a texture grass to make it a field of grass
     var grassMat = new BABYLON.StandardMaterial("grassMat", scene);
     grassMat.diffuseTexture = new BABYLON.Texture("./Textures/grass.jpg", scene);
     grassMat.diffuseTexture.uScale = 20.0;
@@ -58,20 +69,24 @@ var createPlane = function(scene){
 }
 
 var createRoad = function(scene){
+    // Creating road to imitate the street view
     var road = BABYLON.MeshBuilder.CreatePlane("road", {height: 200, width: 12}, scene)
     road.position = new BABYLON.Vector3(-35, -0.08, 0);
     road.rotation.x = Math.PI / 2;
     
+    // implementing the road material 
     var roadMat = new BABYLON.StandardMaterial("roadMat", scene);
     roadMat.diffuseTexture = new BABYLON.Texture("./Textures/road.jpg", scene);
     roadMat.diffuseTexture.vScale = 10.0;
 
     road.material = roadMat;
 
+    // Create an sidewalk to enter the exhibition
     var road2 = BABYLON.MeshBuilder.CreatePlane("road2", {height: 3, width: 14}, scene)
     road2.position = new BABYLON.Vector3(-24.2, -0.09, 0.1);
     road2.rotation.x = Math.PI / 2;
-    
+
+    // Applying texture to the sidewalk
     var road2Mat = new BABYLON.StandardMaterial("road2Mat", scene);
     road2Mat.diffuseTexture = new BABYLON.Texture("./Textures/gravel.jpg", scene);
     road2Mat.diffuseTexture.uScale = 3.0;
@@ -81,9 +96,11 @@ var createRoad = function(scene){
 
 // skybox
 var createSkybox = function(scene){
+    // Creating sky boy for the environment
     const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:500}, scene);
     const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
     skyboxMaterial.backFaceCulling = false;
+    // Adding the texture by using babylon cube texture
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("./Textures/Citybox/skybox2", scene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
@@ -93,6 +110,7 @@ var createSkybox = function(scene){
 
 //function to create boundaries
 var createBoundaries = function(scene){
+    // Create necessaries boundaries for each model
     // WALLS
     // left wall
     var wall1 = BABYLON.MeshBuilder.CreateBox("wall1", {height: 13, width: 20.25, depth: 0.1}, scene)
@@ -203,7 +221,9 @@ var createBoundaries = function(scene){
 
 }
 
+// function to create out of bound collison
 var createOuterbounds = function(scene){
+    
     var outbound1 = BABYLON.MeshBuilder.CreateBox("outbound1", {height: 30, width: 80, depth: 1}, scene)
     outbound1.position = new BABYLON.Vector3(0, 0, 30);
     outbound1.collisionsEnabled = true;
