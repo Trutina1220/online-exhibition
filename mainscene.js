@@ -17,9 +17,9 @@ var createScene = async function (engine) {
 // function to create camera
 var createCamera = function (scene, canvas) {
 
-    var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-20, 2, 0), scene);
+    var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-30, 2, 25), scene);
     camera.attachControl(canvas, true);
-    camera.setTarget(new BABYLON.Vector3(0,2,2));
+    camera.setTarget(new BABYLON.Vector3(0,2,0));
 
     // Setting up wasd camera movement control 
     camera.keysUp.push(87);
@@ -55,6 +55,28 @@ var createPlane = function(scene){
     grassMat.diffuseTexture.vScale = 20.0;
 
     plane.material = grassMat;
+}
+
+var createRoad = function(scene){
+    var road = BABYLON.MeshBuilder.CreatePlane("road", {height: 200, width: 12}, scene)
+    road.position = new BABYLON.Vector3(-35, -0.08, 0);
+    road.rotation.x = Math.PI / 2;
+    
+    var roadMat = new BABYLON.StandardMaterial("roadMat", scene);
+    roadMat.diffuseTexture = new BABYLON.Texture("./Textures/road.jpg", scene);
+    roadMat.diffuseTexture.vScale = 10.0;
+
+    road.material = roadMat;
+
+    var road2 = BABYLON.MeshBuilder.CreatePlane("road2", {height: 3, width: 14}, scene)
+    road2.position = new BABYLON.Vector3(-24.2, -0.09, 0.1);
+    road2.rotation.x = Math.PI / 2;
+    
+    var road2Mat = new BABYLON.StandardMaterial("road2Mat", scene);
+    road2Mat.diffuseTexture = new BABYLON.Texture("./Textures/gravel.jpg", scene);
+    road2Mat.diffuseTexture.uScale = 3.0;
+
+    road2.material = road2Mat;
 }
 
 // skybox
@@ -543,6 +565,30 @@ var doorAnimation = function(scene, object){
     scene.beginAnimation(object, 0, 3 * frameRate, true);
 }
 
+var lamboAnimation = function(scene, object){
+    const animCar = new BABYLON.Animation("carAnimation", "position.z", 10, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const carKeys = []; 
+
+    carKeys.push({
+    frame: 0,
+    value: 100
+    });
+
+
+    carKeys.push({
+    frame: 200,
+    value: -100
+    });
+
+    animCar.setKeys(carKeys);
+
+    object.animations = [];
+    object.animations.push(animCar);
+
+    scene.beginAnimation(object, 0, 200, true);
+}
+
 var createSensors = function(scene){
     
     // Sensor 1
@@ -573,6 +619,7 @@ var main = async function () {
 
     // create objects
     createPlane(scene);
+    createRoad(scene);
     createBoundaries(scene);
     createStairs(scene);
     createStands(scene);
@@ -734,6 +781,7 @@ var main = async function () {
         });
     }
 
+<<<<<<< HEAD
     // music
     // var music = new BABYLON.Sound("Music", "music/music1.mp3", scene, null, 
     // {
@@ -752,6 +800,21 @@ var main = async function () {
     
 
     
+=======
+    var lamboTask = assetsManager.addMeshTask("lamboTask", "", "./Assets/Lambo/", "copy-of-lamborghini-aventador.obj");
+    lamboTask.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            //console.log("mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-38, -0.1, 0);
+            //Scale the model down        
+            mesh.scaling.scaleInPlace(0.9);
+            mesh.rotation.y = -Math.PI/2;
+        
+            lamboAnimation(scene, mesh);
+        });
+    }
+>>>>>>> 33a8574611d23c23bcb37762b1c9255deee2feab
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop
