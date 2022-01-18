@@ -781,26 +781,6 @@ var main = async function () {
         });
     }
 
-<<<<<<< HEAD
-    // music
-    // var music = new BABYLON.Sound("Music", "music/music1.mp3", scene, null, 
-    // {
-    //     loop: true,
-    //     autoplay:true,
-    // })
-
-    var music1 =  new BABYLON.Sound("Music", "music/music1.mp3", scene, null, 
-    {
-        loop: true,
-        autoplay:true,
-    })
-
-    BABYLON.Engine.audioEngine.setGlobalVolume(0.01);
-
-    
-
-    
-=======
     var lamboTask = assetsManager.addMeshTask("lamboTask", "", "./Assets/Lambo/", "copy-of-lamborghini-aventador.obj");
     lamboTask.onSuccess = function(task) {
 
@@ -814,7 +794,6 @@ var main = async function () {
             lamboAnimation(scene, mesh);
         });
     }
->>>>>>> 33a8574611d23c23bcb37762b1c9255deee2feab
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop
