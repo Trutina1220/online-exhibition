@@ -57,6 +57,28 @@ var createPlane = function(scene){
     plane.material = grassMat;
 }
 
+var createRoad = function(scene){
+    var road = BABYLON.MeshBuilder.CreatePlane("road", {height: 200, width: 12}, scene)
+    road.position = new BABYLON.Vector3(-35, -0.08, 0);
+    road.rotation.x = Math.PI / 2;
+    
+    var roadMat = new BABYLON.StandardMaterial("roadMat", scene);
+    roadMat.diffuseTexture = new BABYLON.Texture("./Textures/road.jpg", scene);
+    roadMat.diffuseTexture.vScale = 10.0;
+
+    road.material = roadMat;
+
+    var road2 = BABYLON.MeshBuilder.CreatePlane("road2", {height: 3, width: 14}, scene)
+    road2.position = new BABYLON.Vector3(-24.2, -0.09, 0.1);
+    road2.rotation.x = Math.PI / 2;
+    
+    var road2Mat = new BABYLON.StandardMaterial("road2Mat", scene);
+    road2Mat.diffuseTexture = new BABYLON.Texture("./Textures/gravel.jpg", scene);
+    road2Mat.diffuseTexture.uScale = 3.0;
+
+    road2.material = road2Mat;
+}
+
 // skybox
 var createSkybox = function(scene){
     const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:500}, scene);
@@ -573,6 +595,7 @@ var main = async function () {
 
     // create objects
     createPlane(scene);
+    createRoad(scene);
     createBoundaries(scene);
     createStairs(scene);
     createStands(scene);
@@ -626,7 +649,7 @@ var main = async function () {
             mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
             mesh.material = mammothMat;
 
-            mammothAnimation(scene, mesh);
+            //mammothAnimation(scene, mesh);
         });
     }
 
@@ -645,7 +668,7 @@ var main = async function () {
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
             //Play the Samba animation  
-            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
         });
 
     }
@@ -674,7 +697,7 @@ var main = async function () {
             // scene.beginAnimation(wheelLB, 0, 30, true);
             // scene.beginAnimation(wheelLF, 0, 30, true);
 
-            carAnimation(scene, car);
+            //carAnimation(scene, car);
         });
 
     }
@@ -708,31 +731,31 @@ var main = async function () {
         });
     }
 
-    // tree 1
-    var treeTask1 = assetsManager.addMeshTask("treeTask1", "", "./Assets/trees/OBJ/04/", "Col_1_tree_4.obj");
-    treeTask1.onSuccess = function(task) {
+    // // tree 1
+    // var treeTask1 = assetsManager.addMeshTask("treeTask1", "", "./Assets/trees/OBJ/04/", "Col_1_tree_4.obj");
+    // treeTask1.onSuccess = function(task) {
 
-        task.loadedMeshes.forEach(function(mesh) {
-            console.log("tree mesh: " + mesh.name);
-            mesh.position = new BABYLON.Vector3(-10, 0, 20);
-            mesh.scaling.scaleInPlace(0.7);
-            //mesh.rotation.y = -Math.PI/4;
-            mesh.rotation.x = -Math.PI / 2;
-        });
-    }
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("tree mesh: " + mesh.name);
+    //         mesh.position = new BABYLON.Vector3(-10, 0, 20);
+    //         mesh.scaling.scaleInPlace(0.7);
+    //         //mesh.rotation.y = -Math.PI/4;
+    //         mesh.rotation.x = -Math.PI / 2;
+    //     });
+    // }
 
-    // tree 2
-    var treeTask2 = assetsManager.addMeshTask("treeTask2", "", "./Assets/trees/OBJ/03/", "Col_1_tree_3.obj");
-    treeTask2.onSuccess = function(task) {
+    // // tree 2
+    // var treeTask2 = assetsManager.addMeshTask("treeTask2", "", "./Assets/trees/OBJ/03/", "Col_1_tree_3.obj");
+    // treeTask2.onSuccess = function(task) {
 
-        task.loadedMeshes.forEach(function(mesh) {
-            console.log("tree mesh: " + mesh.name);
-            mesh.position = new BABYLON.Vector3(-10, 0, -20);
-            mesh.scaling.scaleInPlace(0.7);
-            //mesh.rotation.y = -Math.PI/4;
-            mesh.rotation.x = -Math.PI / 2;
-        });
-    }
+    //     task.loadedMeshes.forEach(function(mesh) {
+    //         console.log("tree mesh: " + mesh.name);
+    //         mesh.position = new BABYLON.Vector3(-10, 0, -20);
+    //         mesh.scaling.scaleInPlace(0.7);
+    //         //mesh.rotation.y = -Math.PI/4;
+    //         mesh.rotation.x = -Math.PI / 2;
+    //     });
+    // }
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop
