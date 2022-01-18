@@ -17,9 +17,9 @@ var createScene = async function (engine) {
 // function to create camera
 var createCamera = function (scene, canvas) {
 
-    var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-20, 2, 0), scene);
+    var camera = new BABYLON.UniversalCamera("Camera", new BABYLON.Vector3(-30, 2, 25), scene);
     camera.attachControl(canvas, true);
-    camera.setTarget(new BABYLON.Vector3(0,2,2));
+    camera.setTarget(new BABYLON.Vector3(0,2,0));
 
     // Setting up wasd camera movement control 
     camera.keysUp.push(87);
@@ -565,6 +565,30 @@ var doorAnimation = function(scene, object){
     scene.beginAnimation(object, 0, 3 * frameRate, true);
 }
 
+var lamboAnimation = function(scene, object){
+    const animCar = new BABYLON.Animation("carAnimation", "position.z", 10, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+    const carKeys = []; 
+
+    carKeys.push({
+    frame: 0,
+    value: 100
+    });
+
+
+    carKeys.push({
+    frame: 200,
+    value: -100
+    });
+
+    animCar.setKeys(carKeys);
+
+    object.animations = [];
+    object.animations.push(animCar);
+
+    scene.beginAnimation(object, 0, 200, true);
+}
+
 var createSensors = function(scene){
     
     // Sensor 1
@@ -649,7 +673,7 @@ var main = async function () {
             mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
             mesh.material = mammothMat;
 
-            //mammothAnimation(scene, mesh);
+            mammothAnimation(scene, mesh);
         });
     }
 
@@ -668,7 +692,7 @@ var main = async function () {
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
             //Play the Samba animation  
-            //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
         });
 
     }
@@ -697,7 +721,7 @@ var main = async function () {
             // scene.beginAnimation(wheelLB, 0, 30, true);
             // scene.beginAnimation(wheelLF, 0, 30, true);
 
-            //carAnimation(scene, car);
+            carAnimation(scene, car);
         });
 
     }
@@ -731,31 +755,45 @@ var main = async function () {
         });
     }
 
-    // // tree 1
-    // var treeTask1 = assetsManager.addMeshTask("treeTask1", "", "./Assets/trees/OBJ/04/", "Col_1_tree_4.obj");
-    // treeTask1.onSuccess = function(task) {
+    // tree 1
+    var treeTask1 = assetsManager.addMeshTask("treeTask1", "", "./Assets/trees/OBJ/04/", "Col_1_tree_4.obj");
+    treeTask1.onSuccess = function(task) {
 
-    //     task.loadedMeshes.forEach(function(mesh) {
-    //         console.log("tree mesh: " + mesh.name);
-    //         mesh.position = new BABYLON.Vector3(-10, 0, 20);
-    //         mesh.scaling.scaleInPlace(0.7);
-    //         //mesh.rotation.y = -Math.PI/4;
-    //         mesh.rotation.x = -Math.PI / 2;
-    //     });
-    // }
+        task.loadedMeshes.forEach(function(mesh) {
+            console.log("tree mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-10, 0, 20);
+            mesh.scaling.scaleInPlace(0.7);
+            //mesh.rotation.y = -Math.PI/4;
+            mesh.rotation.x = -Math.PI / 2;
+        });
+    }
 
-    // // tree 2
-    // var treeTask2 = assetsManager.addMeshTask("treeTask2", "", "./Assets/trees/OBJ/03/", "Col_1_tree_3.obj");
-    // treeTask2.onSuccess = function(task) {
+    // tree 2
+    var treeTask2 = assetsManager.addMeshTask("treeTask2", "", "./Assets/trees/OBJ/03/", "Col_1_tree_3.obj");
+    treeTask2.onSuccess = function(task) {
 
-    //     task.loadedMeshes.forEach(function(mesh) {
-    //         console.log("tree mesh: " + mesh.name);
-    //         mesh.position = new BABYLON.Vector3(-10, 0, -20);
-    //         mesh.scaling.scaleInPlace(0.7);
-    //         //mesh.rotation.y = -Math.PI/4;
-    //         mesh.rotation.x = -Math.PI / 2;
-    //     });
-    // }
+        task.loadedMeshes.forEach(function(mesh) {
+            console.log("tree mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-10, 0, -20);
+            mesh.scaling.scaleInPlace(0.7);
+            //mesh.rotation.y = -Math.PI/4;
+            mesh.rotation.x = -Math.PI / 2;
+        });
+    }
+
+    var lamboTask = assetsManager.addMeshTask("lamboTask", "", "./Assets/Lambo/", "copy-of-lamborghini-aventador.obj");
+    lamboTask.onSuccess = function(task) {
+
+        task.loadedMeshes.forEach(function(mesh) {
+            //console.log("mesh: " + mesh.name);
+            mesh.position = new BABYLON.Vector3(-38, -0.1, 0);
+            //Scale the model down        
+            mesh.scaling.scaleInPlace(0.9);
+            mesh.rotation.y = -Math.PI/2;
+        
+            lamboAnimation(scene, mesh);
+        });
+    }
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop
