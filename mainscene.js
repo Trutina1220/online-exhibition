@@ -251,6 +251,7 @@ var createOuterbounds = function(scene){
     outbound4.isVisible = false;
 }
 
+// Function to create invisible stair collision 
 var createStairs = function(scene){
     var stairs1 = BABYLON.MeshBuilder.CreateBox("stairs1", {height: 8, width: 4, depth: 4}, scene)
     stairs1.position = new BABYLON.Vector3(-17.7, -0.7, -6.8);
@@ -281,6 +282,7 @@ var createStairs = function(scene){
     stairsbox2.isVisible = false;
 }
 
+// Function to create stands for collision
 var createStands = function(scene){
     // Stand 1
     var stand1 = BABYLON.MeshBuilder.CreateBox("stand1", {height: 1.5, width: 1.5, depth: 3});
@@ -322,6 +324,7 @@ var createStands = function(scene){
     stand5.material = marbleMat;
 }
 
+// Function to create sliding door 
 var createDoor = function(scene){
     // sliding door
     var door = BABYLON.MeshBuilder.CreateBox("door", {height: 6.5, width: 5.3, depth: 0.2}, scene)
@@ -331,6 +334,7 @@ var createDoor = function(scene){
     door.checkCollisions = true;
     door.visibility = 0.8
 
+    // Applying a glass material to the door to make it realistic
     var glassMat = new BABYLON.StandardMaterial("glassMat", scene);
     glassMat.diffuseTexture = new BABYLON.Texture("./Textures/glass.jpg", scene);
     door.material = glassMat;
