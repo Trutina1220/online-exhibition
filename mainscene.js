@@ -29,7 +29,7 @@ var createCamera = function (scene, canvas) {
 
     camera.speed = 2;
     camera.fov = 0.8;
-    camera.inertia = 0;
+    camera.inertia = 0.2;
 
     // Create pointer lock so that no need to click
     createPointerLock(scene)
@@ -733,6 +733,25 @@ var main = async function () {
             mesh.rotation.x = -Math.PI / 2;
         });
     }
+
+    // music
+    // var music = new BABYLON.Sound("Music", "music/music1.mp3", scene, null, 
+    // {
+    //     loop: true,
+    //     autoplay:true,
+    // })
+
+    var music1 =  new BABYLON.Sound("Music", "music/music1.mp3", scene, null, 
+    {
+        loop: true,
+        autoplay:true,
+    })
+
+    BABYLON.Engine.audioEngine.setGlobalVolume(0.01);
+
+    
+
+    
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop
