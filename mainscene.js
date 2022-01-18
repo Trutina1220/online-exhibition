@@ -806,6 +806,14 @@ var main = async function () {
     }
 
     assetsManager.load();
+
+
+    var music = new BABYLON.Sound("Music", "Music/music1.mp3", scene, null, {
+        loop: true,
+        autoplay: true
+      });
+
+    BABYLON.Engine.audioEngine.setGlobalVolume(0.01);
 }
 
 main();
