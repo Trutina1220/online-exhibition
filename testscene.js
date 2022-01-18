@@ -114,23 +114,23 @@ var main = async function () {
     var assetsManager = new BABYLON.AssetsManager(scene);
 
     // SAMBA WORKS
-    // var sambaTask = assetsManager.addMeshTask("sambaTask", "", "https://assets.babylonjs.com/meshes/", "HVGirl.glb");
-    // sambaTask.onSuccess = function(task){
+    var sambaTask = assetsManager.addMeshTask("sambaTask", "", "https://assets.babylonjs.com/meshes/", "HVGirl.glb");
+    sambaTask.onSuccess = function(task){
     
-    //     task.loadedMeshes.forEach(function(mesh, particleSystems, skeletons, animationGroups) {
-    //         console.log("mesh: " + mesh);
+        task.loadedMeshes.forEach(function(mesh, particleSystems, skeletons, animationGroups) {
+            console.log("mesh: " + mesh);
 
-    //         //Scale the model down        
-    //         mesh.scaling.scaleInPlace(0.1);
+            //Scale the model down        
+            mesh.scaling.scaleInPlace(0.1);
 
-    //         //Get the Samba animation Group
-    //         const sambaAnim = scene.getAnimationGroupByName("Samba");
+            //Get the Samba animation Group
+            const sambaAnim = scene.getAnimationGroupByName("Samba");
 
-    //         //Play the Samba animation  
-    //         //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
-    //     });
+            //Play the Samba animation  
+            //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+        });
 
-    // }
+    }
 
     // MAMMOTH WORKS
     // var mammothTask = assetsManager.addMeshTask("mammothTask", "", "./Assets/Mammoth/", "woolly-mammoth-skeleton.obj");
@@ -236,18 +236,18 @@ var main = async function () {
     // }
 
       // CAR
-      var carTask = assetsManager.addMeshTask("carTask", "", "https://assets.babylonjs.com/meshes/", "car.glb");
-      carTask.onSuccess = function(task){
+    //   var carTask = assetsManager.addMeshTask("carTask", "", "https://assets.babylonjs.com/meshes/", "car.glb");
+    //   carTask.onSuccess = function(task){
       
-          task.loadedMeshes.forEach(function(mesh, particleSystems, skeletons, animationGroups) {
-              console.log("mesh: " + mesh);
+    //       task.loadedMeshes.forEach(function(mesh, particleSystems, skeletons, animationGroups) {
+    //           console.log("mesh: " + mesh);
   
-              const car = scene.getMeshByName("car");
-              car.position = new BABYLON.Vector3(0, 2, 0);
-              car.scaling.scaleInPlace(1);
-          });
+    //           const car = scene.getMeshByName("car");
+    //           car.position = new BABYLON.Vector3(0, 2, 0);
+    //           car.scaling.scaleInPlace(1);
+    //       });
   
-      }
+    //   }
 
     assetsManager.onFinish = function(tasks) {
         // run engine loop

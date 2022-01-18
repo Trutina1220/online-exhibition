@@ -563,36 +563,6 @@ var createSensors = function(scene){
     return sensor1;
 }
 
-var wheelAnimation = function(scene, wheel){
-    const frameRate = 5;
-    const angle = 3.14159;
-
-    // X ROTATE
-    const xRotate = new BABYLON.Animation("xRotate", "rotation", frameRate, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-
-    const keyFrames = []; 
-
-    keyFrames.push({
-        frame: 0,
-        value: new BABYLON.Vector3(angle, 0, 0)
-    });
-
-    keyFrames.push({
-        frame: frameRate,
-        value: 0
-    });
-
-    keyFrames.push({
-        frame: 2 * frameRate,
-        value: new BABYLON.Vector3(angle, 0, 0)
-    });
-
-    xRotate.setKeys(keyFrames);
-
-    wheel.animations.push(xRotate);
-
-    scene.beginAnimation(wheel, 0, 2 * frameRate, true);
-}
 
 // main function
 var main = async function () {
@@ -656,7 +626,7 @@ var main = async function () {
             mammothMat.diffuseTexture = new BABYLON.Texture("./Assets/Mammoth/ClayColor.jpg", scene);
             mesh.material = mammothMat;
 
-            //mammothAnimation(scene, mesh);
+            mammothAnimation(scene, mesh);
         });
     }
 
@@ -675,7 +645,7 @@ var main = async function () {
             const sambaAnim = scene.getAnimationGroupByName("Samba");
 
             //Play the Samba animation  
-            //sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
+            sambaAnim.start(true, 1.0, sambaAnim.from, sambaAnim.to, false);
         });
 
     }
@@ -704,7 +674,7 @@ var main = async function () {
             // scene.beginAnimation(wheelLB, 0, 30, true);
             // scene.beginAnimation(wheelLF, 0, 30, true);
 
-            //carAnimation(scene, car);
+            carAnimation(scene, car);
         });
 
     }
